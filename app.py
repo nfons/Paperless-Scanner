@@ -274,8 +274,6 @@ class PaperlessScanApp:
         
         try:
             # Save the image
-            self.scanned_image.save(filename)
-            self.scanned_image_path = filename
             self.filename = filename
             
             # Hide filename frame
