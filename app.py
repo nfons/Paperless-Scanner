@@ -16,12 +16,12 @@ class PaperlessScanApp:
         self.scanned_image_path = None
         self.scanned_image = None
         self.photo_image = None
-        self.url = None
-        self.token = None
+        self.api_url = None
+        self.api_token = None
         
         # Center the window
         self.center_window()
-        
+        self.load_config()
         # Create main frame
         main_frame = tk.Frame(root, bg='#f0f0f0')
         main_frame.pack(expand=True, fill='both', padx=20, pady=20)
@@ -263,13 +263,9 @@ class PaperlessScanApp:
         try:
             self.status_label.config(text="Uploading to Paperless...")
             self.root.update()
-            
-            # Paperless-ngx configuration
-            api_url = "FILL ME IN W/ W/E IS THE API URL" 
-            api_token = "TOKEN FROM PAPERLESS-NGX > PROFILE > API TOKEN"
-            
+             
             # Upload the document
-            success, status_code, response = upload_to_paperlessngx(self.scanned_image_path, api_url, api_token)
+            success, status_code, response = upload_to_paperlessngx(self.scanned_image_path, self.api_url, self.api_token)
             if success:
                 self.status_label.config(text="Document uploaded successfully!")
                 messagebox.showinfo("Upload Success", "Document uploaded to Paperless-ngx!")
@@ -292,6 +288,8 @@ class PaperlessScanApp:
         if os.path.exists(config_file):
             with open(config_file, 'r') as file:
                 config = yaml.safe_load(file)
+                self.api_url = config['api_url']
+                self.api_token = config['api_token']
             return config
         else:
             return None
