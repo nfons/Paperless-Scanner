@@ -14,7 +14,7 @@ A desktop application that streamlines the process of scanning documents and upl
 
 ## Screenshots
 
-*[Screenshots would go here]*
+ -- TODO for later me.
 
 ## Installation
 
@@ -30,8 +30,8 @@ A desktop application that streamlines the process of scanning documents and upl
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
-   cd scanner
+   git clone https://github.com/nfons/Paperless-Scanner.git
+   cd paperless-scanner
    ```
 
 2. **Install dependencies**:
@@ -133,13 +133,6 @@ For smart filename suggestions:
 - Verify your OpenAI API key is correct
 - Check your internet connection
 - Ensure you have sufficient OpenAI API credits
-
-### Debug Mode
-
-Run with debug output:
-```bash
-python app.py --debug
-```
 
 ## Development
 
