@@ -18,7 +18,7 @@ class PaperlessScanApp:
         self.photo_image = None
         self.api_url = None
         self.api_token = None
-        
+        self.filename = None
         # Center the window
         self.center_window()
         self.load_config()
@@ -72,6 +72,43 @@ class PaperlessScanApp:
             pady=5
         )
         refresh_button.pack(side='left', padx=(10, 0))
+        
+        # Filename input frame (initially hidden)
+        self.filename_frame = tk.Frame(main_frame, bg='#f0f0f0')
+        
+        # Filename label
+        filename_label = tk.Label(
+            self.filename_frame,
+            text="Filename:",
+            font=("Arial", 10, "bold"),
+            fg='#333333',
+            bg='#f0f0f0'
+        )
+        filename_label.pack(side='left', padx=(0, 10))
+        
+        # Filename entry
+        self.filename_var = tk.StringVar()
+        self.filename_entry = tk.Entry(
+            self.filename_frame,
+            textvariable=self.filename_var,
+            font=("Arial", 10),
+            width=30
+        )
+        self.filename_entry.pack(side='left', padx=(0, 10))
+        
+        # Save button
+        self.save_button = tk.Button(
+            self.filename_frame,
+            text="Save",
+            command=self.save_scanned_image,
+            font=("Arial", 9),
+            bg='#4CAF50',
+            fg='white',
+            relief='flat',
+            padx=10,
+            pady=5
+        )
+        self.save_button.pack(side='left')
         
         # Image display frame
         self.image_frame = tk.Frame(main_frame, bg='white', relief='solid', bd=1)
@@ -156,6 +193,8 @@ class PaperlessScanApp:
         exit_button.bind('<Leave>', lambda e: exit_button.configure(bg='#f44336'))
         refresh_button.bind('<Enter>', lambda e: refresh_button.configure(bg='#1976D2'))
         refresh_button.bind('<Leave>', lambda e: refresh_button.configure(bg='#2196F3'))
+        self.save_button.bind('<Enter>', lambda e: self.save_button.configure(bg='#45a049'))
+        self.save_button.bind('<Leave>', lambda e: self.save_button.configure(bg='#4CAF50'))
         
         # Initialize scanners
         self.refresh_scanners()
@@ -202,9 +241,13 @@ class PaperlessScanApp:
             if self.scanned_image is not None:
                 # Display the image
                 self.display_image_object(self.scanned_image)
-                self.upload_button.config(state='normal')
-                self.status_label.config(text="Document scanned successfully!")
-                self.scanned_image_path = 'tmp.jpg'
+                
+                # Show filename input frame
+                self.filename_frame.pack(pady=10, fill='x')
+                self.filename_var.set("")  # Clear previous filename
+                self.filename_entry.focus()  # Set focus to filename entry
+                
+                self.status_label.config(text="Document scanned successfully! Enter filename to save.")
             else:
                 self.status_label.config(text="Scan cancelled or failed")
                 messagebox.showinfo("Scan Cancelled", "Scan was cancelled or failed")
@@ -212,6 +255,41 @@ class PaperlessScanApp:
         except Exception as e:
             self.status_label.config(text=f"Scan error: {str(e)}")
             messagebox.showerror("Scan Error", f"Error during scanning: {str(e)}")
+    
+    def save_scanned_image(self):
+        """Save the scanned image with the specified filename"""
+        if self.scanned_image is None:
+            messagebox.showerror("Save Error", "No scanned image to save")
+            return
+            
+        filename = self.filename_var.get().strip()
+        
+        if not filename:
+            messagebox.showwarning("Filename Required", "Please enter a filename")
+            return
+        
+        # Add .jpg extension if not provided
+        if not filename.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff')):
+            filename += '.jpg'
+        
+        try:
+            # Save the image
+            self.scanned_image.save(filename)
+            self.scanned_image_path = filename
+            self.filename = filename
+            
+            # Hide filename frame
+            self.filename_frame.pack_forget()
+            
+            # Enable upload button
+            self.upload_button.config(state='normal')
+            
+            self.status_label.config(text=f"Document saved as '{filename}'")
+            messagebox.showinfo("Save Success", f"Document saved as '{filename}'")
+            
+        except Exception as e:
+            self.status_label.config(text=f"Save error: {str(e)}")
+            messagebox.showerror("Save Error", f"Error saving document: {str(e)}")
     
     def display_image_object(self, pil_image):
         """Display a PIL Image object in the app"""
@@ -264,8 +342,8 @@ class PaperlessScanApp:
             self.status_label.config(text="Uploading to Paperless...")
             self.root.update()
              
-            # Upload the document
-            success, status_code, response = upload_to_paperlessngx(self.scanned_image_path, self.api_url, self.api_token)
+            # Upload the document with filename
+            success, status_code, response = upload_to_paperlessngx(self.scanned_image_path, self.api_url, self.api_token, self.filename)
             if success:
                 self.status_label.config(text="Document uploaded successfully!")
                 messagebox.showinfo("Upload Success", "Document uploaded to Paperless-ngx!")

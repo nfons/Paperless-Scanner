@@ -32,14 +32,22 @@ def scan_image():
     return pil_image
         
 
-def upload_to_paperlessngx(file_path, api_url, api_token):
+def upload_to_paperlessngx(file_path, api_url, api_token, filename=None):
     headers = {
         "Authorization": f"Token {api_token}"
     }
     files = {
         "document": open(file_path, "rb")
     }
-    response = requests.post(f"{api_url}/api/documents/post_document/", headers=headers, files=files)
+    
+    # Prepare data with filename if provided
+    data = {}
+    if filename:
+        # Remove file extension for the title
+        title = os.path.splitext(filename)[0]
+        data["title"] = title
+    
+    response = requests.post(f"{api_url}/api/documents/post_document/", headers=headers, files=files, data=data)
     if response.status_code == 200:
         print("Upload successful:", response.json())
         return True, None, None
