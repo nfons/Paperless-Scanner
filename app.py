@@ -73,8 +73,8 @@ class PaperlessScanApp:
         )
         refresh_button.pack(side='left', padx=(10, 0))
         
-        # Filename input frame (initially hidden)
-        self.filename_frame = tk.Frame(main_frame, bg='#f0f0f0')
+        # Filename input frame (initially hidden) - now in scanner frame
+        self.filename_frame = tk.Frame(scanner_frame, bg='#f0f0f0')
         
         # Filename label
         filename_label = tk.Label(
@@ -84,7 +84,7 @@ class PaperlessScanApp:
             fg='#333333',
             bg='#f0f0f0'
         )
-        filename_label.pack(side='left', padx=(0, 10))
+        filename_label.pack(side='left', padx=(10, 10))
         
         # Filename entry
         self.filename_var = tk.StringVar()
@@ -92,7 +92,7 @@ class PaperlessScanApp:
             self.filename_frame,
             textvariable=self.filename_var,
             font=("Arial", 10),
-            width=30
+            width=20
         )
         self.filename_entry.pack(side='left', padx=(0, 10))
         
@@ -243,7 +243,7 @@ class PaperlessScanApp:
                 self.display_image_object(self.scanned_image)
                 
                 # Show filename input frame
-                self.filename_frame.pack(pady=10, fill='x')
+                self.filename_frame.pack(side='left', padx=(10, 0))
                 self.filename_var.set("")  # Clear previous filename
                 self.filename_entry.focus()  # Set focus to filename entry
                 
