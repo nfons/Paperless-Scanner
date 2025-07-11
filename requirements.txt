@@ -1,0 +1,5 @@
+openai>=1.0.0
+Pillow>=9.0.0
+requests>=2.25.0
+PyYAML>=6.0
+pywin32>=305 
