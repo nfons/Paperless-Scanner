@@ -40,7 +40,7 @@ A desktop application that streamlines the process of scanning documents and upl
    - Create a new token with appropriate permissions
 
 2. **Configure the settings**
-   - <img src="docs/images/setting.png" alt="drawing" width="500"/>
+   - <img src="docs/images/settings.png" alt="drawing" width="500"/>
    - <img src="docs/images/config.png" alt="drawing" width="500"/>
 
 ## Supported Scanners
