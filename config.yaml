@@ -1,2 +1,5 @@
-api_url: "http://localhost:8000"
-api_token: "TOKEN FROM PAPERLESS-NGX > PROFILE > API TOKEN"
+api_url: "PAPERLESS_API_URL"
+api_token: "PAPERLESS_API_TOKEN"
+openai_api_key: "OPENAI_API_KEY"
+## OR
+gemini_api_key: "GEMINI_API_KEY"
