@@ -1,6 +1,12 @@
 # Paperless Scanner
 
-A desktop application that streamlines the process of scanning documents and uploading them to Paperless-ngx. Tired of having to scan papers, then login to paperless, and then upload, and then delete the scanned doc? This app does it all for you in one seamless workflow.
+A desktop application that streamlines the process of scanning documents and uploading them to Paperless-ngx. I got Tired of having to scan papers, then login to paperless, and then upload, and then delete the scanned doc? This app does it all for you in one seamless workflow.
+
+## Before:
+<img src="docs/images/diagram.png" alt="drawing" width="500"/>
+
+## After
+<img src="docs/images/scanner-diagram.png" alt="drawing" width="500"/>
 
 ## Features
 
@@ -10,7 +16,6 @@ A desktop application that streamlines the process of scanning documents and upl
 - **Modern GUI**: Clean, intuitive interface built with tkinter
 - **Scanner Detection**: Automatic detection and management of available scanners
 - **Configurable**: Easy configuration through YAML files
-- **Cross-Platform**: Works on Windows (with scanner support via WIA)
 
 ## Screenshots
 
@@ -77,6 +82,8 @@ A desktop application that streamlines the process of scanning documents and upl
 ### Build the app
 ``` pyinstaller app.py -n paperless-scanner --icon icon.ico  ```
 
+Create config.yaml (or just move it into directory)
+
 ### AI-Powered Filename Suggestions
 
 The application can automatically suggest filenames based on the document content using either OpenAI or Google Gemini:
@@ -93,8 +100,8 @@ The application can automatically suggest filenames based on the document conten
 - `api_token`: Your Paperless API token
 
 #### AI Configuration (Optional) Choose 1
-- `openai_api_key`: Your OpenAI API key for smart filename suggestions using GPT-4o-mini
-- `gemini_api_key`: Your Google Gemini API key for smart filename suggestions using Gemini 2.5 Pro
+- `openai_api_key`: Your OpenAI API key
+- `gemini_api_key`: Your Google Gemini API key
 
 ## File Structure
 
@@ -113,9 +120,6 @@ scanner/
 
 ### Paperless-ngx API
 The application integrates with Paperless-ngx using its REST API:
-- Uploads documents with proper metadata
-- Uses the filename as the document title
-- Supports various image formats (JPEG, PNG, BMP, TIFF)
 
 ### AI APIs (Optional)
 For smart filename suggestions:
@@ -145,15 +149,7 @@ For smart filename suggestions:
 - Verify your OpenAI API key is correct (for OpenAI)
 - Verify your Google Gemini API key is correct (for Gemini)
 - Check your internet connection
-- Ensure you have sufficient API credits for your chosen provider
-
-## Development
-
-### Adding New Features
-
-1. **Scanner Support**: The scanner module uses Windows WIA for scanner communication
-2. **AI Integration**: The AI module can be extended to support other AI providers (currently openai and gemini)
-3. **GUI**: Built with tkinter for cross-platform compatibility
+- Ensure you have sufficient API credits for your chosen provider (or switch from google to openai or vice versa if running out of credits.)
 
 ### Contributing
 
@@ -168,4 +164,5 @@ For smart filename suggestions:
 Released under GPL v3. See [License.md](License.md) for details.
 
 ## Acknowledgments
-
+Stackoverflow for bunch of stuff
+https://github.com/soachishti/pyScanLib for some guidance
