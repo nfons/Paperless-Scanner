@@ -34,31 +34,14 @@ A desktop application that streamlines the process of scanning documents and upl
 
 ### Setup
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/nfons/Paperless-Scanner.git
-   cd paperless-scanner
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure the application**:
-   Create a `config.yaml` file in the project directory:
-   ```yaml
-   api_url: "https://your-paperless-instance.com"
-   api_token: "your-paperless-api-token"
-   openai_api_key: "your-openai-api-key"  # Optional
-   OR this:
-   gemini_api_key: "your-gemini-api-key"  # Optional
-   ```
-
-4. **Get your Paperless API token**:
+1. **Get your Paperless API token**:
    - Log into your Paperless-ngx instance
    - Go to Settings → Users → Your User → API Tokens
    - Create a new token with appropriate permissions
+
+2. **Configure the settings**
+   - <img src="docs/images/setting.png" alt="drawing" width="500"/>
+   - <img src="docs/images/config.png" alt="drawing" width="500"/>
 
 ## Supported Scanners
 This should support most scanners that work on windows.. but here is a list that was tested against.
