@@ -5,6 +5,7 @@ from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
 from scanner import list_scanners, scan_image, upload_to_paperlessngx
 from ai import get_recommended_filename_from_pil_image, get_recommended_filename_from_pil_image_gemini
+from configwindow import ConfigWindow
 
 class PaperlessScanApp:
     def __init__(self, root):
@@ -162,6 +163,21 @@ class PaperlessScanApp:
         )
         self.upload_button.pack(side='left', padx=10)
         
+        # Settings button
+        settings_button = tk.Button(
+            button_frame,
+            text="Settings",
+            command=self.open_settings,
+            font=("Arial", 12),
+            bg='#9C27B0',
+            fg='white',
+            relief='flat',
+            padx=20,
+            pady=10,
+            cursor='hand2'
+        )
+        settings_button.pack(side='left', padx=10)
+        
         # Exit button
         exit_button = tk.Button(
             button_frame,
@@ -198,9 +214,15 @@ class PaperlessScanApp:
         refresh_button.bind('<Leave>', lambda e: refresh_button.configure(bg='#2196F3'))
         self.save_button.bind('<Enter>', lambda e: self.save_button.configure(bg='#45a049'))
         self.save_button.bind('<Leave>', lambda e: self.save_button.configure(bg='#4CAF50'))
+        settings_button.bind('<Enter>', lambda e: settings_button.configure(bg='#7B1FA2'))
+        settings_button.bind('<Leave>', lambda e: settings_button.configure(bg='#9C27B0'))
         
         # Initialize scanners
         self.refresh_scanners()
+    
+    def open_settings(self):
+        """Open the configuration settings window"""
+        ConfigWindow(self.root)
     
     def exit_app(self):
         # clean up the temp file
@@ -254,7 +276,7 @@ class PaperlessScanApp:
                     self.filename = ""
                 # Show filename input frame
                 self.filename_frame.pack(side='left', padx=(10, 0))
-                self.filename_var.set(self.filename)  # Clear previous filename
+                self.filename_var.set(self.filename or "")  # Clear previous filename
                 self.filename_entry.focus()  # Set focus to filename entry
                 self.scanned_image_path = 'tmp.jpg'
                 self.status_label.config(text="Document scanned successfully! Enter filename to save.")
