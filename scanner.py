@@ -2,8 +2,7 @@ import win32com.client
 from PIL import Image
 import requests
 import os
-import io
-import tempfile
+
 
 def list_scanners():
     wia = win32com.client.Dispatch("WIA.DeviceManager")
@@ -48,12 +47,15 @@ def upload_to_paperlessngx(file_path, api_url, api_token, filename=None):
         data["title"] = title
     
     response = requests.post(f"{api_url}/api/documents/post_document/", headers=headers, files=files, data=data)
+    # close the file
+    files["document"].close()
     if response.status_code == 200:
         print("Upload successful:", response.json())
         return True, None, None
     else:
         print("Upload failed:", response.status_code, response.json())
         return False,response.status_code, response.json()
+        # close the file
 
 # testing only
 if __name__ == "__main__":

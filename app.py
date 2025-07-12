@@ -1,9 +1,10 @@
+import os
+import yaml
 import tkinter as tk
 from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
-import os
 from scanner import list_scanners, scan_image, upload_to_paperlessngx
-import yaml
+from ai import get_recommended_filename_from_pil_image, get_recommended_filename_from_pil_image_gemini
 
 class PaperlessScanApp:
     def __init__(self, root):
@@ -18,7 +19,9 @@ class PaperlessScanApp:
         self.photo_image = None
         self.api_url = None
         self.api_token = None
-        self.filename = None
+        self.openai_api_key = None
+        self.gemini_api_key = None
+        self.filename = ""
         # Center the window
         self.center_window()
         self.load_config()
@@ -241,12 +244,19 @@ class PaperlessScanApp:
             if self.scanned_image is not None:
                 # Display the image
                 self.display_image_object(self.scanned_image)
-                
+
+                # get the filename based on the api key type...
+                if self.openai_api_key:
+                    self.filename = get_recommended_filename_from_pil_image(self.scanned_image, self.openai_api_key)
+                elif self.gemini_api_key:
+                    self.filename = get_recommended_filename_from_pil_image_gemini(self.scanned_image, self.gemini_api_key)
+                else:
+                    self.filename = ""
                 # Show filename input frame
                 self.filename_frame.pack(side='left', padx=(10, 0))
-                self.filename_var.set("")  # Clear previous filename
+                self.filename_var.set(self.filename)  # Clear previous filename
                 self.filename_entry.focus()  # Set focus to filename entry
-                
+                self.scanned_image_path = 'tmp.jpg'
                 self.status_label.config(text="Document scanned successfully! Enter filename to save.")
             else:
                 self.status_label.config(text="Scan cancelled or failed")
@@ -355,9 +365,6 @@ class PaperlessScanApp:
             messagebox.showerror("Upload Error", f"Error uploading document: {str(e)}")
 
 
-    ''' TO DO 
-    - add a config file to store the api url and token
-    '''
     def load_config(self):
         # load the config file
         config_file = 'config.yaml'
@@ -366,6 +373,8 @@ class PaperlessScanApp:
                 config = yaml.safe_load(file)
                 self.api_url = config['api_url']
                 self.api_token = config['api_token']
+                self.openai_api_key = config.get('openai_api_key', None)
+                self.gemini_api_key = config.get('gemini_api_key', None)
             return config
         else:
             return None
