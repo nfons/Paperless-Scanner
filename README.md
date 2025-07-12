@@ -19,7 +19,7 @@ A desktop application that streamlines the process of scanning documents and upl
 
 ## Screenshots
 
- -- TODO for later me.
+<img src="docs/images/image.png" alt="drawing" width="500"/>
 
 ## Installation
 
@@ -59,6 +59,18 @@ A desktop application that streamlines the process of scanning documents and upl
    - Log into your Paperless-ngx instance
    - Go to Settings → Users → Your User → API Tokens
    - Create a new token with appropriate permissions
+
+## Supported Scanners
+This should support most scanners that work on windows.. but here is a list that was tested against.
+
+### Brother
+- DS940DW
+- DS640
+- RDS740D
+### Epson
+- ES50
+### HP
+- HPPS200
 
 ## Usage
 

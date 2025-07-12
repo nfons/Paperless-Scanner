@@ -385,10 +385,9 @@ def main():
         os.remove('tmp.jpg')
 
     root = tk.Tk()
-    root.iconbitmap('icon.ico')
+    # root.iconbitmap('docs/images/icon.ico')
     app = PaperlessScanApp(root)
     root.mainloop()
 
 if __name__ == "__main__":
     main()
-
