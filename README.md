@@ -74,6 +74,9 @@ A desktop application that streamlines the process of scanning documents and upl
 
 6. **Click "Upload to Paperless"** to upload to your Paperless-ngx instance
 
+### Build the app
+``` pyinstaller app.py -n paperless-scanner --icon icon.ico  ```
+
 ### AI-Powered Filename Suggestions
 
 The application can automatically suggest filenames based on the document content using either OpenAI or Google Gemini:
