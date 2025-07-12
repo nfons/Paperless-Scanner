@@ -3,6 +3,9 @@
 import base64
 import io
 import openai
+from google import genai
+from google.genai import types
+from PIL import Image
 
 ## pretty much for debugging
 def get_recommended_filename(file_path, apikey):
@@ -94,9 +97,7 @@ def get_recommended_filename_from_pil_image(pil_image, api_key):
     """
     try:
         # Convert PIL image to bytes
-        img_byte_arr = io.BytesIO()
-        pil_image.save(img_byte_arr, format='JPEG')
-        img_byte_arr = img_byte_arr.getvalue()
+        img_byte_arr = PIL_to_bytes(pil_image)
         
         # Create the API request
         response = apirequest(api_key, img_byte_arr)
@@ -104,12 +105,59 @@ def get_recommended_filename_from_pil_image(pil_image, api_key):
             
     except Exception as e:
         print(f"Error getting recommended filename from PIL image: {str(e)}")
-        return None
+        return ""
+
+def PIL_to_bytes(pil_image):
+    """
+    Convert a PIL Image object to bytes.
+    """
+    img_byte_arr = io.BytesIO()
+    pil_image.save(img_byte_arr, format='JPEG')
+    return img_byte_arr.getvalue()
+
+def get_recommended_filename_from_pil_image_gemini(pil_image, api_key):
+    """
+    Get a recommended filename from a PIL Image object using Google Gemini.
+    
+    Args:
+        pil_image (PIL.Image): PIL Image object to analyze
+        api_key (str): Google Gemini API key
+        
+    Returns:
+        str: Recommended filename (without extension) or empty string if failed
+    """
+    recommended_filename = ""
+    try:
+        # Configure Gemini
+        client = genai.Client(api_key=api_key)
+        model = 'gemini-2.5-pro'
+        
+        # Create the prompt
+        prompt = "Analyze this document and suggest a filename (without extension) that describes its content. Return only the filename, nothing else. Use underscores instead of spaces and keep it under 25 characters."
+        
+        img_bytes = PIL_to_bytes(pil_image)
+        # Generate response with the PIL image
+        for chunk in client.models.generate_content_stream(
+            model=model,
+            contents=[
+                prompt,
+                types.Part.from_bytes(data=img_bytes, mime_type='image/jpeg'),
+            ],
+        ):
+            print(chunk.text)
+            recommended_filename += chunk.text or ""
+        
+        return recommended_filename
+            
+    except Exception as e:
+        print(f"Error getting recommended filename from PIL image with Gemini: {str(e)}")
+        return ""
 
 # only for debug / testing
 if __name__ == "__main__":
-    API_KEY = "your-openai-api-key-here"
-    filename = get_recommended_filename("document.jpg", API_KEY)
+    API_KEY = "YOUR_API_KEY"
+    pil_image = Image.open("document.jpg")
+    filename = get_recommended_filename_from_pil_image_gemini(pil_image, API_KEY)
     if filename:
         print(f"Recommended filename: {filename}")
     else:
