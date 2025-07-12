@@ -5,7 +5,7 @@ A desktop application that streamlines the process of scanning documents and upl
 ## Features
 
 - **One-Click Scanning**: Scan documents directly from your scanner with a simple button click
-- **Smart Filename Suggestions**: AI-powered filename recommendations based on document content using OpenAI's GPT-4o-mini
+- **Smart Filename Suggestions**: AI-powered filename recommendations based on document content using OpenAI's GPT-4o-mini or Google's Gemini
 - **Direct Paperless Integration**: Upload scanned documents directly to Paperless-ngx with proper metadata
 - **Modern GUI**: Clean, intuitive interface built with tkinter
 - **Scanner Detection**: Automatic detection and management of available scanners
@@ -25,6 +25,7 @@ A desktop application that streamlines the process of scanning documents and upl
 - A scanner connected to your computer
 - Paperless-ngx instance running
 - OpenAI API key (optional, for smart filename suggestions)
+- Google Gemini API key (optional, for alternative smart filename suggestions)
 
 ### Setup
 
@@ -45,6 +46,8 @@ A desktop application that streamlines the process of scanning documents and upl
    api_url: "https://your-paperless-instance.com"
    api_token: "your-paperless-api-token"
    openai_api_key: "your-openai-api-key"  # Optional
+   OR this:
+   gemini_api_key: "your-gemini-api-key"  # Optional
    ```
 
 4. **Get your Paperless API token**:
@@ -73,11 +76,12 @@ A desktop application that streamlines the process of scanning documents and upl
 
 ### AI-Powered Filename Suggestions
 
-The application can automatically suggest filenames based on the document content:
+The application can automatically suggest filenames based on the document content using either OpenAI or Google Gemini:
 
 - After scanning, the AI will analyze the document and suggest a descriptive filename
 - You can accept the suggestion or enter your own filename
 - Filenames are automatically cleaned (spaces replaced with underscores, invalid characters removed)
+- Supports both OpenAI GPT-4o-mini and Google Gemini 2.5 Pro models
 
 ### Configuration Options
 
@@ -85,8 +89,9 @@ The application can automatically suggest filenames based on the document conten
 - `api_url`: Your Paperless-ngx instance URL
 - `api_token`: Your Paperless API token
 
-#### OpenAI Configuration (Optional)
-- `openai_api_key`: Your OpenAI API key for smart filename suggestions
+#### AI Configuration (Optional) Choose 1
+- `openai_api_key`: Your OpenAI API key for smart filename suggestions using GPT-4o-mini
+- `gemini_api_key`: Your Google Gemini API key for smart filename suggestions using Gemini 2.5 Pro
 
 ## File Structure
 
@@ -109,11 +114,15 @@ The application integrates with Paperless-ngx using its REST API:
 - Uses the filename as the document title
 - Supports various image formats (JPEG, PNG, BMP, TIFF)
 
-### OpenAI API (Optional)
+### AI APIs (Optional)
 For smart filename suggestions:
+
+**OpenAI API**:
 - Uses GPT-4o-mini for document analysis
-- Analyzes visual content to suggest descriptive filenames
-- Configurable parameters for response length and creativity
+
+**Google Gemini API**:
+- Uses Gemini 2.5 Pro for document analysis
+
 
 ## Troubleshooting
 
@@ -130,16 +139,17 @@ For smart filename suggestions:
 - Ensure the API token has proper permissions
 
 **AI suggestions not working**:
-- Verify your OpenAI API key is correct
+- Verify your OpenAI API key is correct (for OpenAI)
+- Verify your Google Gemini API key is correct (for Gemini)
 - Check your internet connection
-- Ensure you have sufficient OpenAI API credits
+- Ensure you have sufficient API credits for your chosen provider
 
 ## Development
 
 ### Adding New Features
 
 1. **Scanner Support**: The scanner module uses Windows WIA for scanner communication
-2. **AI Integration**: The AI module can be extended to support other AI providers
+2. **AI Integration**: The AI module can be extended to support other AI providers (currently openai and gemini)
 3. **GUI**: Built with tkinter for cross-platform compatibility
 
 ### Contributing
@@ -156,6 +166,3 @@ Released under GPL v3. See [License.md](License.md) for details.
 
 ## Acknowledgments
 
-- Paperless-ngx team for the excellent document management system
-- OpenAI for providing the AI capabilities
-- Python community for the excellent libraries used in this project
