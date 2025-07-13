@@ -4,3 +4,4 @@ requests>=2.25.0
 PyYAML>=6.0
 pywin32>=305 
 google-genai
+pytwain>=2.3.0
