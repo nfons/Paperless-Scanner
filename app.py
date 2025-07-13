@@ -3,7 +3,7 @@ import yaml
 import tkinter as tk
 from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
-from scanner import list_scanners, scan_image, upload_to_paperlessngx
+from lib.scanner import list_scanners, scan_image, upload_to_paperlessngx
 from ai import get_recommended_filename_from_pil_image, get_recommended_filename_from_pil_image_gemini
 from configwindow import ConfigWindow
 
