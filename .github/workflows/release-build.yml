@@ -25,7 +25,7 @@ jobs:
         
     - name: Build with PyInstaller
       run: |
-        pyinstaller app.py -n -c -F paperless-scanner --icon icon.ico
+        pyinstaller app.py -c -F -n paperless-scanner --icon icon.ico
         
     - name: Create release asset
       run: |
