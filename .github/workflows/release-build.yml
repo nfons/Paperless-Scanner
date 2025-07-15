@@ -2,7 +2,7 @@ name: Build Release
 
 on:
   release:
-    types: [published, created, prereleased]
+    types: [published]
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
     - name: Create release asset
       run: |
         # Create a zip file of the dist directory
-        Compress-Archive -Path "dist\paperless-scanner.exe" -DestinationPath "paperless-scanner-windows.zip"
+        Compress-Archive -Path "dist\paperless-scanner.exe" -DestinationPath "paperless-scanner-windows.exe"
         
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
