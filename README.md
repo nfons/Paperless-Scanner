@@ -151,7 +151,7 @@ For smart filename suggestions:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
+4. Test thoroughly, run unit tests
 5. Submit a pull request
 
 ## License
