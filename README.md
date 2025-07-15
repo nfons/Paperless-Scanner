@@ -159,5 +159,5 @@ For smart filename suggestions:
 Released under GPL v3. See [License.md](License.md) for details.
 
 ## Acknowledgments
-Stackoverflow for bunch of stuff
-https://github.com/soachishti/pyScanLib for some guidance
+- Stackoverflow for bunch of stuff
+- https://github.com/soachishti/pyScanLib for some guidance
