@@ -1,34 +1,16 @@
+# pylint: disable=E1101, C0301, W0311, C0303, W0718, E0401
+# pylint: disable = no-name-in-module
 import win32com.client
 from PIL import Image
 import requests
 import os
-
+import lib.windows_scanner as scanclient
 
 def list_scanners():
-    wia = win32com.client.Dispatch("WIA.DeviceManager")
-    devices = wia.DeviceInfos
-    scanners = []
-    for device in devices:
-        if device.Type == 1:  # 1 = Scanner
-            scanners.append(device.Properties("Name").Value)
-    return scanners
+    return scanclient.list_scanners()
 
 def scan_image():
-    """Scan an image and return a PIL Image object"""
-    wia = win32com.client.Dispatch("WIA.CommonDialog")
-    wia_image = wia.ShowAcquireImage()
-    
-    if wia_image is None:
-        return None
-
-    temp_path = 'tmp.jpg'
-    wia_image.SaveFile(temp_path)
-
-    # Load with PIL
-    pil_image = Image.open(temp_path)
-    
-    
-    return pil_image
+    return scanclient.scan_image()
         
 
 def upload_to_paperlessngx(file_path, api_url, api_token, filename=None):
