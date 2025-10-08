@@ -280,6 +280,8 @@ class PaperlessScanApp:
                 self.filename_entry.focus()  # Set focus to filename entry
                 self.scanned_image_path = 'tmp.jpg'
                 self.status_label.config(text="Document scanned successfully! Enter filename to save.")
+                # Enable upload button
+                self.upload_button.config(state='normal')
             else:
                 self.status_label.config(text="Scan cancelled or failed")
                 messagebox.showinfo("Scan Cancelled", "Scan was cancelled or failed")
@@ -310,10 +312,7 @@ class PaperlessScanApp:
             
             # Hide filename frame
             self.filename_frame.pack_forget()
-            
-            # Enable upload button
-            self.upload_button.config(state='normal')
-            
+                        
             self.status_label.config(text=f"Document saved as '{filename}'")
             messagebox.showinfo("Save Success", f"Document saved as '{filename}'")
             
