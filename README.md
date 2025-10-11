@@ -94,7 +94,7 @@ The application can automatically suggest filenames based on the document conten
 - `api_url`: Your Paperless-ngx instance URL
    - make sure to add http or https 
 - `api_token`: Your Paperless API token
-   - profile > api key
+   - profile > API Auth Token
 
 #### AI Configuration (Optional) Choose 1
 - `openai_api_key`: Your OpenAI API key
