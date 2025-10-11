@@ -13,6 +13,7 @@ class PaperlessScanApp:
         self.root.title("Paperless Scan App")
         self.root.geometry("1000x800")
         self.root.configure(bg='#f0f0f0')
+        self.root.load_config = self.load_config
         
         # Initialize variables
         self.scanned_image_path = None
