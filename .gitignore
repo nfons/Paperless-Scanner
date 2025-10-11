@@ -1,0 +1,5 @@
+paperless-scanner.spec
+build/
+dist/paperless-scanner/config.yaml
+dist/
+lib/__pycache__/__init__.cpython-313.pyc
