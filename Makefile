@@ -7,6 +7,9 @@ all: build
 build:
 	pyinstaller app.py -n paperless-scanner --icon icon.ico
 
+build-osx:
+	pyinstaller app.py -n paperless-scanner --icon icon.ico --osx-bundle-identifier com.nfons.paperlessscanner
+
 # Clean build artifacts
 clean:
 	rm -rf build/
