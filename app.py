@@ -225,10 +225,14 @@ class PaperlessScanApp:
         """Open the configuration settings window"""
         ConfigWindow(self.root)
     
+
+    def cleanup(self):
+         if os.path.exists('tmp.jpg'):
+            os.remove('tmp.jpg')
+
     def exit_app(self):
         # clean up the temp file
-        if os.path.exists('tmp.jpg'):
-            os.remove('tmp.jpg')
+        self.cleanup()
         self.root.quit()
 
     def center_window(self):
@@ -261,6 +265,9 @@ class PaperlessScanApp:
             self.status_label.config(text="Scanning document...")
             self.root.update()
             
+
+            # clear out existing file if its there...
+            self.cleanup()
             # Scan the image and get PIL Image object
             self.scanned_image = scan_image()
             
