@@ -5,7 +5,7 @@ all: build
 
 # Build the executable using PyInstaller
 build:
-	pyinstaller app.py -n paperless-scanner --icon icon.ico
+	pyinstaller app.py -c -F -n paperless-scanner --icon icon.ico -w --clean
 
 # Clean build artifacts
 clean:
