@@ -373,8 +373,12 @@ class PaperlessScanApp:
         """Upload the scanned document to Paperless-ngx"""
         if not self.scanned_image_path or not os.path.exists(self.scanned_image_path):
             messagebox.showerror("Upload Error", "No scanned document to upload")
-            return
-        
+            # Show file selector dialog for manual selection
+            file_path = tk.filedialog.askopenfilename(title="Select Document to Upload", 
+                                                       filetypes=[("All Files", "*.*")])
+            if not file_path:
+                return
+            self.scanned_image_path = file_path
         try:
             self.status_label.config(text="Uploading to Paperless...")
             self.root.update()
