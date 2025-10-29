@@ -3,3 +3,6 @@ build/
 dist/paperless-scanner/config.yaml
 dist/
 lib/__pycache__/
+__pycache__/
+tests/__pycache__/
+*.pyc
