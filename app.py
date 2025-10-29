@@ -1,7 +1,7 @@
 import os
 import yaml
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox, ttk, filedialog
 from PIL import Image, ImageTk
 from lib.scanner import list_scanners, scan_image, upload_to_paperlessngx
 from lib.ai import get_recommended_filename_from_pil_image, get_recommended_filename_from_pil_image_gemini
@@ -373,10 +373,12 @@ class PaperlessScanApp:
     def upload_to_paperless(self):
         """Upload the scanned document to Paperless-ngx"""
         if not self.scanned_image_path or not os.path.exists(self.scanned_image_path):
-            messagebox.showerror("Upload Error", "No scanned document to upload")
+            selectfile = messagebox.askokcancel("Upload Error", "No scanned document to upload, want to select an existing file?")
+
+            if selectfile:
             # Show file selector dialog for manual selection
-            file_path = tk.filedialog.askopenfilename(title="Select Document to Upload", 
-                                                       filetypes=[("All Files", "*.*")])
+                file_path = filedialog.askopenfilename(title="Select Document to Upload", 
+                                                        filetypes=[("All Files", "*.*")])
             if not file_path:
                 return
             self.scanned_image_path = file_path
