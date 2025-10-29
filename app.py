@@ -151,7 +151,7 @@ class PaperlessScanApp:
         # Upload button
         self.upload_button = tk.Button(
             button_frame,
-            text="Upload to Paperless",
+            text="Select Document",
             command=self.upload_to_paperless,
             font=("Arial", 12),
             bg='#FF9800',
@@ -288,8 +288,9 @@ class PaperlessScanApp:
                 self.filename_entry.focus()  # Set focus to filename entry
                 self.scanned_image_path = 'tmp.jpg'
                 self.status_label.config(text="Document scanned successfully! Enter filename to save.")
-                # Enable upload button
+                # Enable upload button, change text
                 self.upload_button.config(state='normal')
+                self.upload_button.config(text="Upload to Paperless")
             else:
                 self.status_label.config(text="Scan cancelled or failed")
                 messagebox.showinfo("Scan Cancelled", "Scan was cancelled or failed")
