@@ -69,7 +69,7 @@ class TestScanDocument(unittest.TestCase):
         # scanned_image_path set to tmp.jpg
         self.assertEqual(self.instance.scanned_image_path, 'tmp.jpg')
         # upload button enabled
-        self.instance.upload_button.config.assert_called_with(state='normal')
+        self.instance.upload_button.config.assert_called_with(text="Upload to Paperless")
         # status_label updated to success message
         self.instance.status_label.config.assert_called_with(text="Document scanned successfully! Enter filename to save.")
 

@@ -288,8 +288,7 @@ class PaperlessScanApp:
                 self.filename_entry.focus()  # Set focus to filename entry
                 self.scanned_image_path = 'tmp.jpg'
                 self.status_label.config(text="Document scanned successfully! Enter filename to save.")
-                # Enable upload button, change text
-                self.upload_button.config(state='normal')
+                # change text
                 self.upload_button.config(text="Upload to Paperless")
             else:
                 self.status_label.config(text="Scan cancelled or failed")
