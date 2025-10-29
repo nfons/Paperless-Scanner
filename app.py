@@ -160,7 +160,7 @@ class PaperlessScanApp:
             padx=20,
             pady=10,
             cursor='hand2',
-            state='disabled'
+            state='normal'
         )
         self.upload_button.pack(side='left', padx=10)
         
