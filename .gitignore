@@ -6,3 +6,4 @@ lib/__pycache__/
 __pycache__/
 tests/__pycache__/
 *.pyc
+.vscode/settings.json
