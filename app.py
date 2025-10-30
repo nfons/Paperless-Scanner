@@ -1,7 +1,7 @@
 import os
 import yaml
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox, ttk, filedialog
 from PIL import Image, ImageTk
 from lib.scanner import list_scanners, scan_image, upload_to_paperlessngx
 from lib.ai import get_recommended_filename_from_pil_image, get_recommended_filename_from_pil_image_gemini
@@ -151,7 +151,7 @@ class PaperlessScanApp:
         # Upload button
         self.upload_button = tk.Button(
             button_frame,
-            text="Upload to Paperless",
+            text="Select Document",
             command=self.upload_to_paperless,
             font=("Arial", 12),
             bg='#FF9800',
@@ -160,7 +160,7 @@ class PaperlessScanApp:
             padx=20,
             pady=10,
             cursor='hand2',
-            state='disabled'
+            state='normal'
         )
         self.upload_button.pack(side='left', padx=10)
         
@@ -225,7 +225,6 @@ class PaperlessScanApp:
         """Open the configuration settings window"""
         ConfigWindow(self.root)
     
-
     def cleanup(self):
          if os.path.exists('tmp.jpg'):
             os.remove('tmp.jpg')
@@ -288,8 +287,8 @@ class PaperlessScanApp:
                 self.filename_entry.focus()  # Set focus to filename entry
                 self.scanned_image_path = 'tmp.jpg'
                 self.status_label.config(text="Document scanned successfully! Enter filename to save.")
-                # Enable upload button
-                self.upload_button.config(state='normal')
+                # change text
+                self.upload_button.config(text="Upload to Paperless")
             else:
                 self.status_label.config(text="Scan cancelled or failed")
                 messagebox.showinfo("Scan Cancelled", "Scan was cancelled or failed")
@@ -372,9 +371,11 @@ class PaperlessScanApp:
     def upload_to_paperless(self):
         """Upload the scanned document to Paperless-ngx"""
         if not self.scanned_image_path or not os.path.exists(self.scanned_image_path):
-            messagebox.showerror("Upload Error", "No scanned document to upload")
-            return
-        
+            file_path = filedialog.askopenfilename(title="Select Document to Upload", 
+                                                        filetypes=[("All Files", "*.*")])
+            if not file_path:
+                return
+            self.scanned_image_path = file_path
         try:
             self.status_label.config(text="Uploading to Paperless...")
             self.root.update()
@@ -392,7 +393,6 @@ class PaperlessScanApp:
         except Exception as e:
             self.status_label.config(text=f"Upload error: {str(e)}")
             messagebox.showerror("Upload Error", f"Error uploading document: {str(e)}")
-
 
     def load_config(self):
         # load the config file

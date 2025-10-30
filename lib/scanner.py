@@ -1,14 +1,16 @@
 # pylint: disable=E1101, C0301, W0311, C0303, W0718, E0401
 # pylint: disable = no-name-in-module
-import win32com.client
 from PIL import Image
 import requests
 import os
 
 # SO this is a bit of a hack, but it works, I will just comment out the windows_scanner.py file when using debian based systems 
 # and use the linux scanner.py file on those systems
-import lib.windows_scanner as scanclient
-# import lib.linux_scanner as scanclient
+# import lib.windows_scanner as scanclient
+if os.name == 'nt':
+    import lib.windows_scanner as scanclient
+else:
+    import lib.linux_scanner as scanclient
 
 def list_scanners():
     return scanclient.list_scanners()
