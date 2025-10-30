@@ -372,11 +372,7 @@ class PaperlessScanApp:
     def upload_to_paperless(self):
         """Upload the scanned document to Paperless-ngx"""
         if not self.scanned_image_path or not os.path.exists(self.scanned_image_path):
-            selectfile = messagebox.askokcancel("Upload Error", "No scanned document to upload, want to select an existing file?")
-
-            if selectfile:
-            # Show file selector dialog for manual selection
-                file_path = filedialog.askopenfilename(title="Select Document to Upload", 
+            file_path = filedialog.askopenfilename(title="Select Document to Upload", 
                                                         filetypes=[("All Files", "*.*")])
             if not file_path:
                 return
