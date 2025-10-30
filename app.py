@@ -225,7 +225,6 @@ class PaperlessScanApp:
         """Open the configuration settings window"""
         ConfigWindow(self.root)
     
-
     def cleanup(self):
          if os.path.exists('tmp.jpg'):
             os.remove('tmp.jpg')
@@ -394,7 +393,6 @@ class PaperlessScanApp:
         except Exception as e:
             self.status_label.config(text=f"Upload error: {str(e)}")
             messagebox.showerror("Upload Error", f"Error uploading document: {str(e)}")
-
 
     def load_config(self):
         # load the config file
