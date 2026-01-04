@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paperless Scan App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Paperless Scan App</h1>
+
+        <div class="scanner-controls">
+            <div class="scanner-section">
+                <label class="label">Available Scanners:</label>
+                <select id="scannerSelect" class="scanner-select">
+                    <option>Loading scanners...</option>
+                </select>
+                <button id="refreshBtn" class="btn btn-refresh">Refresh</button>
+            </div>
+
+            <div id="filenameSection" class="filename-section" style="display: none;">
+                <label class="label">Filename:</label>
+                <input type="text" id="filenameInput" class="filename-input" placeholder="Enter filename">
+                <button id="saveBtn" class="btn btn-save">Save</button>
+            </div>
+        </div>
+
+        <div class="image-container" id="imageContainer">
+            <p class="placeholder-text">No image scanned yet.<br>Click 'Scan Document' to start.</p>
+        </div>
+
+        <div class="button-group">
+            <button id="scanBtn" class="btn btn-primary">Scan Document</button>
+            <button id="uploadBtn" class="btn btn-upload">Select Document</button>
+            <button id="settingsBtn" class="btn btn-settings">Settings</button>
+            <button id="exitBtn" class="btn btn-exit">Exit</button>
+        </div>
+
+        <div class="status" id="status">Ready to scan</div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2>Configuration Settings</h2>
+
+            <div class="config-section">
+                <h3>Paperless-ngx Configuration</h3>
+
+                <div class="form-group">
+                    <label>API URL:</label>
+                    <input type="text" id="apiUrl" placeholder="http://localhost:8010">
+                    <span class="help-text">Paperless-ngx API URL (e.g., http://localhost:8010)</span>
+                </div>
+
+                <div class="form-group">
+                    <label>API Token:</label>
+                    <input type="password" id="apiToken" placeholder="Your API token">
+                    <span class="help-text">Paperless-ngx API Token</span>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h3>AI Configuration (Optional)</h3>
+
+                <div class="form-group">
+                    <label>AI Provider:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="aiProvider" value="openai"> OpenAI</label>
+                        <label><input type="radio" name="aiProvider" value="gemini"> Google Gemini</label>
+                        <label><input type="radio" name="aiProvider" value="none" checked> None</label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="openaiGroup" style="display: none;">
+                    <label>OpenAI API Key:</label>
+                    <input type="password" id="openaiApiKey" placeholder="Your OpenAI API key">
+                    <span class="help-text">OpenAI API Key for filename generation</span>
+                </div>
+
+                <div class="form-group" id="geminiGroup" style="display: none;">
+                    <label>Gemini API Key:</label>
+                    <input type="password" id="geminiApiKey" placeholder="Your Gemini API key">
+                    <span class="help-text">Google Gemini API Key for filename generation</span>
+                </div>
+
+                <p class="info-text">Note: Only one AI provider can be active at a time. Select 'None' to disable AI filename generation.</p>
+            </div>
+
+            <div class="modal-buttons">
+                <button id="saveConfigBtn" class="btn btn-save">Save Configuration</button>
+                <button id="cancelConfigBtn" class="btn btn-exit">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

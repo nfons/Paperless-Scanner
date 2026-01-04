@@ -25,8 +25,8 @@ A desktop application that streamlines the process of scanning documents and upl
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- Windows OS (for scanner support)
+- Node.js 16 or higher
+- Windows OS (for scanner support via WIA)
 - A scanner connected to your computer
 - Paperless-ngx instance running
 - OpenAI API key (optional, for smart filename suggestions)
@@ -34,12 +34,19 @@ A desktop application that streamlines the process of scanning documents and upl
 
 ### Setup
 
-1. **Get your Paperless API token**:
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Get your Paperless API token**:
    - Log into your Paperless-ngx instance
    - Go to Settings → Users → Your User → API Tokens
    - Create a new token with appropriate permissions
 
-2. **Configure the settings**
+3. **Configure the settings**
+   - Launch the application and click "Settings"
+   - Or manually edit `config.yaml` in the project root
    - <img src="docs/images/settings.png" alt="drawing" width="500"/>
    - <img src="docs/images/config.png" alt="drawing" width="500"/>
 
@@ -61,7 +68,7 @@ This should support most scanners that work on windows.. but here is a list that
 
 1. **Launch the application**:
    ```bash
-   python app.py
+   npm start
    ```
 
 2. **Select your scanner** (if multiple are available)
@@ -74,10 +81,29 @@ This should support most scanners that work on windows.. but here is a list that
 
 6. **Click "Upload to Paperless"** to upload to your Paperless-ngx instance
 
-### Build the app
-``` pyinstaller app.py -n paperless-scanner --icon icon.ico  ```
+### Development Mode
+```bash
+npm run dev
+```
 
-Create config.yaml (or just move it into directory)
+### Build the app
+
+For Windows:
+```bash
+npm run build:win
+```
+
+For macOS:
+```bash
+npm run build:mac
+```
+
+For Linux:
+```bash
+npm run build:linux
+```
+
+The built application will be in the `dist` folder.
 
 ### AI-Powered Filename Suggestions
 
@@ -104,12 +130,21 @@ The application can automatically suggest filenames based on the document conten
 ## File Structure
 
 ```
-scanner/
-├── app.py              # Main GUI application
-├── scanner.py          # Scanner and Paperless integration
-├── ai.py              # AI-powered filename suggestions
+paperless-scanner/
+├── src/
+│   ├── main.js              # Electron main process
+│   ├── index.html           # Main UI
+│   ├── styles.css           # Application styles
+│   ├── renderer.js          # Renderer process logic
+│   └── lib/
+│       ├── scanner.js       # Scanner platform abstraction
+│       ├── windowsScanner.js # Windows WIA scanner implementation
+│       ├── linuxScanner.js  # Linux scanner placeholder
+│       ├── paperless.js     # Paperless-ngx API integration
+│       ├── ai.js            # AI-powered filename suggestions
+│       └── config.js        # Configuration management
+├── package.json        # Node.js dependencies and scripts
 ├── config.yaml        # Configuration file
-├── requirements.txt   # Python dependencies
 ├── README.md         # This file
 └── License.md        # License information
 ```
@@ -126,7 +161,7 @@ For smart filename suggestions:
 - Uses GPT-4o-mini for document analysis
 
 **Google Gemini API**:
-- Uses Gemini 2.5 Pro for document analysis
+- Uses Gemini 2.0 Flash for document analysis
 
 
 ## Troubleshooting
@@ -135,8 +170,9 @@ For smart filename suggestions:
 
 **Scanner not detected**:
 - Ensure your scanner is connected and powered on
-- Check that WIA drivers are properly installed
+- Check that WIA drivers are properly installed (Windows only)
 - Try refreshing the scanner list
+- On Windows, ensure you have the necessary .NET Framework installed for edge-js
 
 **Upload fails**:
 - Verify your Paperless-ngx URL and API token
@@ -161,6 +197,16 @@ For smart filename suggestions:
 
 Released under GPL v3. See [License.md](License.md) for details.
 
+## Technology Stack
+
+- **Electron**: Cross-platform desktop application framework
+- **Node.js**: JavaScript runtime for backend logic
+- **Edge.js**: Bridge between Node.js and .NET for Windows WIA scanner access
+- **OpenAI API**: GPT-4o-mini for intelligent filename suggestions
+- **Google Gemini API**: Alternative AI provider for filename generation
+- **Paperless-ngx API**: Document management integration
+
 ## Acknowledgments
 - Stackoverflow for bunch of stuff
 - https://github.com/soachishti/pyScanLib for some guidance
+- Original Python version by the project contributors
