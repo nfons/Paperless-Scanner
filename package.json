@@ -12,16 +12,21 @@
     "build:linux": "electron-builder --linux",
     "test": "jest"
   },
-  "keywords": ["paperless", "scanner", "document-management"],
+  "keywords": [
+    "paperless",
+    "scanner",
+    "document-management"
+  ],
   "author": "",
   "license": "GPL-3.0",
   "dependencies": {
+    "@google/generative-ai": "^0.1.0",
     "axios": "^1.6.0",
-    "electron": "^28.0.0",
+    "edge-js": "^20.0.0",
+    "electron": "^34.0.0",
+    "electron-edge-js": "^39.0.1",
     "js-yaml": "^4.1.0",
     "openai": "^4.20.0",
-    "@google/generative-ai": "^0.1.0",
-    "edge-js": "^20.0.0",
     "sharp": "^0.33.0"
   },
   "devDependencies": {

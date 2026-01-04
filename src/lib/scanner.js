@@ -4,6 +4,7 @@ const os = require('os');
 let scannerModule;
 
 if (os.platform() === 'win32') {
+    console.log('Loading Windows scanner module');
     scannerModule = require('./windowsScanner');
 } else if (os.platform() === 'linux') {
     scannerModule = require('./linuxScanner');

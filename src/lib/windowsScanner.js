@@ -1,4 +1,4 @@
-const edge = require('edge-js');
+const edge = require('electron-edge-js');
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -78,8 +78,8 @@ let listScannersFunc = null;
 let scanImageFunc = null;
 
 try {
-    listScannersFunc = edge.func(listScannersCS);
-    scanImageFunc = edge.func(scanImageCS);
+   listScannersFunc = edge.func(listScannersCS);
+   scanImageFunc = edge.func(scanImageCS);
 } catch (error) {
     console.error('Failed to initialize scanner functions:', error);
 }
@@ -94,7 +94,10 @@ async function listScanners() {
     }
 
     try {
-        const scanners = await listScannersFunc(null);
+        let scanners = undefined;
+        await listScannersFunc(null, (err, result) => {
+            scanners = result;
+        });
         return scanners || [];
     } catch (error) {
         console.error('Error listing scanners:', error);
@@ -112,7 +115,10 @@ async function scanImage() {
     }
 
     try {
-        const tempPath = await scanImageFunc(null);
+        let tempPath = undefined; 
+        await scanImageFunc(null, (err, result) => {
+            tempPath = result;
+        });
         return tempPath;
     } catch (error) {
         console.error('Error scanning image:', error);
