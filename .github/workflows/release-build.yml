@@ -25,6 +25,7 @@ jobs:
         
     - name: Build with PyInstaller
       run: |
+        export APP_VERSION=$(git symbolic-ref -q --short HEAD || git describe --tags --exact-match || echo "untagged-$(git rev-parse --short HEAD)")
         pyinstaller app.py -c -F -n paperless-scanner --icon icon.ico -w --clean
         
     - name: Create release asset

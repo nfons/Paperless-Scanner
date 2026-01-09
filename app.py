@@ -9,6 +9,7 @@ from configwindow import ConfigWindow
 
 class PaperlessScanApp:
     def __init__(self, root):
+        version = os.getenv('APP_VERSION', 'v0.0.1')
         self.root = root
         self.root.title("Paperless Scan App")
         self.root.geometry("1000x800")
@@ -202,6 +203,14 @@ class PaperlessScanApp:
             fg='#666666',
             bg='#f0f0f0'
         )
+        self.version_label = tk.Label(
+            main_frame,
+            text=version,
+            font=("Arial", 8),
+            fg='#999999',
+            bg='#f0f0f0'
+        )
+        self.version_label.pack(side='bottom', pady=(0,5))
         self.status_label.pack(pady=5)
         
         # Bind hover effects
