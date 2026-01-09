@@ -321,6 +321,7 @@ class PaperlessScanApp:
             self.filename_frame.pack_forget()
                         
             self.status_label.config(text=f"Document saved as '{filename}'")
+            self.scanned_image.save(filename)
             messagebox.showinfo("Save Success", f"Document saved as '{filename}'")
             
         except Exception as e:
