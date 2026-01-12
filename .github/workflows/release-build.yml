@@ -26,8 +26,9 @@ jobs:
     - name: Get version from release tag
       id: get_version
       run: |
-        echo "APP_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-  
+        VERSION=$(git describe --tags --exact-match 2>/dev/null || echo "v0.0.0")
+        echo "APP_VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "Version is $VERSION"
     - name: Build with PyInstaller
       run: |
         pyinstaller app.py -c -F -n paperless-scanner --icon icon.ico -w --clean
