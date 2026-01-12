@@ -22,10 +22,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pyinstaller
-        
+    
+    - name: Get version from release tag
+      id: get_version
+      run: |
+        echo "APP_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+  
     - name: Build with PyInstaller
       run: |
-        export APP_VERSION=$(git symbolic-ref -q --short HEAD || git describe --tags --exact-match || echo "untagged-$(git rev-parse --short HEAD)")
         pyinstaller app.py -c -F -n paperless-scanner --icon icon.ico -w --clean
         
     - name: Create release asset
