@@ -29,6 +29,7 @@ jobs:
         VERSION=$(git describe --tags --exact-match 2>/dev/null || echo "v0.0.0")
         echo "APP_VERSION=${VERSION}" >> $GITHUB_ENV
         echo "Version is $VERSION"
+        shell: bash
     - name: Build with PyInstaller
       run: |
         pyinstaller app.py -c -F -n paperless-scanner --icon icon.ico -w --clean
