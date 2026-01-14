@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paperless Scanner Documentation</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="brand">
+    <div class="brand-inner">
+      <div>
+        <h1>Paperless Scanner</h1>
+        <p class="tagline">Scan documents and upload to Paperless-ngx in one seamless workflow.</p>
+      </div>
+      <div class="badges">
+        <span class="badge">Cross‑platform (SOON)</span>
+        <span class="badge">GUI</span>
+        <span class="badge">GPLv3</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav aria-label="Sections">
+        <ul>
+          <li><a href="#overview" class="active">Overview</a></li>
+          <li><a href="#installation">Installation</a></li>
+          <li><a href="#usage">Usage</a></li>
+          <li><a href="#configuration">Configuration</a></li>
+          <li><a href="#scanners">Supported Scanners</a></li>
+          <li><a href="#troubleshooting">Troubleshooting</a></li>
+          <li><a href="#contributing">Contributing</a></li>
+          <li><a href="#license">License</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <section id="overview">
+        <h2>Overview</h2>
+        <p>
+          A desktop application that streamlines the process of scanning documents and uploading them to Paperless‑ngx. Tired of scanning, logging in, uploading, and cleaning up? This app does it all in one workflow.
+        </p>
+        <div class="image-row">
+          <figure>
+            <img src="images/diagram.png" alt="Before diagram" />
+            <figcaption>Before</figcaption>
+          </figure>
+          <figure>
+            <img src="images/scanner-diagram.png" alt="After diagram" />
+            <figcaption>After</figcaption>
+          </figure>
+        </div>
+
+        <div class="feature-grid">
+          <div class="card">
+            <h3>One‑Click Scanning</h3>
+            <p>Scan documents directly with a simple button click.</p>
+          </div>
+          <div class="card">
+            <h3>AI Filenames</h3>
+            <p>Smart suggestions using OpenAI or Google Gemini.</p>
+          </div>
+          <div class="card">
+            <h3>Paperless‑ngx Upload</h3>
+            <p>Send documents with proper metadata in seconds.</p>
+          </div>
+          <div class="card">
+            <h3>Auto Scanner Detection</h3>
+            <p>Find and manage available scanners automatically.</p>
+          </div>
+        </div>
+
+        <div class="screenshot-wrap">
+          <img src="images/image.png" alt="App screenshot" class="screenshot" />
+        </div>
+      </section>
+
+      <section id="installation">
+        <h2>Installation</h2>
+        <div class="grid-two">
+          <div>
+            <h3>Prerequisites</h3>
+            <ul>
+              <li>Python 3.10 or higher</li>
+              <li>Windows, macOS, or Linux with a compatible scanner</li>
+              <li>Running Paperless‑ngx instance</li>
+              <li>Optional: OpenAI API key or Google Gemini API key</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Paperless API Token</h3>
+            <ol>
+              <li>Log into your Paperless‑ngx instance</li>
+              <li>Go to Settings → Users → Your User → API Tokens</li>
+              <li>Create a token with appropriate permissions</li>
+            </ol>
+          </div>
+        </div>
+        <h3>Configure</h3>
+        <div class="image-row">
+          <figure>
+            <img src="images/settings.png" alt="Settings screenshot" />
+            <figcaption>Settings</figcaption>
+          </figure>
+          <figure>
+            <img src="images/config.png" alt="Config screenshot" />
+            <figcaption>Config</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="usage">
+        <h2>Usage</h2>
+        <h3>Run from source</h3>
+        <pre><code>python app.py</code></pre>
+        <ol>
+          <li>Select your scanner (if multiple are available)</li>
+          <li>Click "Scan Document"</li>
+          <li>Enter a filename or accept the AI suggestion</li>
+          <li>Click "Save" to save locally</li>
+          <li>Click "Upload to Paperless"</li>
+        </ol>
+        <h3>Build a standalone app</h3>
+        <p>For macOS packaging via py2app:</p>
+        <pre><code>python setup.py py2app</code></pre>
+        <p>Generic build (e.g., Windows/Linux) via PyInstaller:</p>
+        <pre><code>pyinstaller app.py -n paperless-scanner --icon icon.ico</code></pre>
+      </section>
+
+      <section id="configuration">
+        <h2>Configuration</h2>
+        <div class="grid-two">
+          <div class="card">
+            <h3>Paperless‑ngx</h3>
+            <ul>
+              <li><code>api_url</code>: your instance URL (http/https)</li>
+              <li><code>api_token</code>: API token (Profile → API Auth Token)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>AI (optional)</h3>
+            <ul>
+              <li><code>openai_api_key</code> or</li>
+              <li><code>gemini_api_key</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="scanners">
+        <h2>Supported Scanners</h2>
+        <p>Designed to work with most scanners supported by your OS. Tested devices include:</p>
+        <div class="grid-three">
+          <div>
+            <h3>Brother</h3>
+            <ul>
+              <li>DS940DW</li>
+              <li>DS640</li>
+              <li>RDS740D</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Epson</h3>
+            <ul>
+              <li>ES50</li>
+            </ul>
+          </div>
+          <div>
+            <h3>HP</h3>
+            <ul>
+              <li>HPPS200</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+        <div class="grid-two">
+          <div>
+            <h3>Scanner not detected</h3>
+            <ul>
+              <li>Ensure your scanner is connected and powered</li>
+              <li>Verify drivers are installed (WIA/SANE/ICA as applicable)</li>
+              <li>Refresh the scanner list</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Upload fails</h3>
+            <ul>
+              <li>Verify Paperless‑ngx URL and API token</li>
+              <li>Ensure the instance is reachable</li>
+              <li>Confirm token permissions</li>
+            </ul>
+          </div>
+          <div>
+            <h3>AI suggestions not working</h3>
+            <ul>
+              <li>Check your OpenAI or Gemini API key</li>
+              <li>Confirm connectivity and credits</li>
+              <li>Try switching providers</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="contributing">
+        <h2>Contributing</h2>
+        <ol>
+          <li>Fork the repository</li>
+          <li>Create a feature branch</li>
+          <li>Make changes</li>
+          <li>Run tests</li>
+          <li>Open a pull request</li>
+        </ol>
+      </section>
+
+      <section id="license">
+        <h2>License</h2>
+        <p>
+          Released under GPL v3. See <a href="../License.md">License.md</a> for the full text.
+        </p>
+      </section>
+
+      <footer>
+        <p>© Paperless Scanner • GPL v3</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="assets/main.js"></script>
+</body>
+</html>
+
