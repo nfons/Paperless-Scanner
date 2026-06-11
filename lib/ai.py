@@ -30,19 +30,28 @@ def get_recommended_filename(file_path, apikey):
         print(f"Error getting recommended filename: {str(e)}")
         return None
 
-def apirequest(api_key, file_content):
+def apirequest(api_key, file_content, base_url=None, model="gpt-4o-mini"):
     """
-    Make API request to OpenAI for filename recommendation.
-    
+    Make API request to an OpenAI-compatible chat completions endpoint
+    for filename recommendation.
+
     Args:
-        api_key (str): OpenAI API key
-        file_content (bytes): File content to analyze
-        
+        api_key (str): API key (use any non-empty placeholder for endpoints
+            that don't require auth, e.g. local Ollama).
+        file_content (bytes): File content to analyze.
+        base_url (str, optional): Override the API base URL. Set this to point
+            at a self-hosted OpenAI-compatible endpoint (e.g. Ollama's
+            "http://localhost:11434/v1"). When None, uses OpenAI's default.
+        model (str): Model name to request.
+
     Returns:
         str: Recommended filename or None if failed
     """
-    response = openai.OpenAI(api_key=api_key).chat.completions.create(
-            model="gpt-4o-mini",  # idk, maybe allow for other models? let users choose?
+    client_kwargs = {"api_key": api_key or "not-needed"}
+    if base_url:
+        client_kwargs["base_url"] = base_url
+    response = openai.OpenAI(**client_kwargs).chat.completions.create(
+            model=model,
             messages=[
                 {
                     "role": "system",
@@ -105,6 +114,29 @@ def get_recommended_filename_from_pil_image(pil_image, api_key):
             
     except Exception as e:
         print(f"Error getting recommended filename from PIL image: {str(e)}")
+        return ""
+
+def get_recommended_filename_from_pil_image_custom(pil_image, endpoint, model, api_key=None):
+    """
+    Get a recommended filename from a PIL Image using a self-hosted,
+    OpenAI-compatible endpoint (e.g. Ollama at http://localhost:11434/v1).
+
+    Args:
+        pil_image (PIL.Image): PIL Image object to analyze
+        endpoint (str): Base URL of the OpenAI-compatible API.
+            For Ollama, use "http://<host>:11434/v1".
+        model (str): Model name to use (e.g. "llava", "llama3.2-vision",
+            "moondream", "bakllava").
+        api_key (str, optional): API key, if the endpoint requires one.
+
+    Returns:
+        str: Recommended filename (without extension) or empty string if failed
+    """
+    try:
+        img_byte_arr = PIL_to_bytes(pil_image)
+        return apirequest(api_key, img_byte_arr, base_url=endpoint, model=model)
+    except Exception as e:
+        print(f"Error getting recommended filename from custom endpoint: {str(e)}")
         return ""
 
 def PIL_to_bytes(pil_image):
