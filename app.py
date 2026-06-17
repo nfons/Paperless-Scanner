@@ -4,7 +4,11 @@ import tkinter as tk
 from tkinter import messagebox, ttk, filedialog
 from PIL import Image, ImageTk
 from lib.scanner import list_scanners, scan_image, upload_to_paperlessngx
-from lib.ai import get_recommended_filename_from_pil_image, get_recommended_filename_from_pil_image_gemini
+from lib.ai import (
+    get_recommended_filename_from_pil_image,
+    get_recommended_filename_from_pil_image_gemini,
+    get_recommended_filename_from_pil_image_custom,
+)
 from configwindow import ConfigWindow
 
 class PaperlessScanApp:
@@ -24,6 +28,9 @@ class PaperlessScanApp:
         self.api_token = None
         self.openai_api_key = None
         self.gemini_api_key = None
+        self.custom_endpoint = None
+        self.custom_model = None
+        self.custom_api_key = None
         self.filename = ""
         # Center the window
         self.center_window()
@@ -283,8 +290,15 @@ class PaperlessScanApp:
                 # Display the image
                 self.display_image_object(self.scanned_image)
 
-                # get the filename based on the api key type...
-                if self.openai_api_key:
+                # get the filename based on the configured AI provider
+                if self.custom_endpoint and self.custom_model:
+                    self.filename = get_recommended_filename_from_pil_image_custom(
+                        self.scanned_image,
+                        self.custom_endpoint,
+                        self.custom_model,
+                        self.custom_api_key,
+                    )
+                elif self.openai_api_key:
                     self.filename = get_recommended_filename_from_pil_image(self.scanned_image, self.openai_api_key)
                 elif self.gemini_api_key:
                     self.filename = get_recommended_filename_from_pil_image_gemini(self.scanned_image, self.gemini_api_key)
@@ -414,6 +428,9 @@ class PaperlessScanApp:
                 self.api_token = config['api_token']
                 self.openai_api_key = config.get('openai_api_key', None)
                 self.gemini_api_key = config.get('gemini_api_key', None)
+                self.custom_endpoint = config.get('custom_endpoint', None)
+                self.custom_model = config.get('custom_model', None)
+                self.custom_api_key = config.get('custom_api_key', None)
             return config
         else:
             return None
