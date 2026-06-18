@@ -44,4 +44,8 @@ def run_tests():
 
 if __name__ == '__main__':
     success = run_tests()
-    sys.exit(0 if success else 1) 
+
+    # flush the app so that It closes properly in GHA...this might work...this might not.
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(0 if success else 1)
