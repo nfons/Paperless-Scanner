@@ -58,6 +58,77 @@ class TestAI(unittest.TestCase):
         self.assertEqual(call_kwargs['max_tokens'], 50)
         self.assertAlmostEqual(call_kwargs['temperature'], 0.3)
 
+    @patch('openai.OpenAI')
+    def test_apirequest_custom_base_url_and_model(self, mock_openai):
+        """apirequest should forward a custom base_url and model to the client"""
+        mock_client = Mock()
+        mock_openai.return_value = mock_client
+        mock_completion = Mock()
+        mock_client.chat.completions.create.return_value = mock_completion
+        mock_completion.choices = [Mock(message=Mock(content="local_doc"))]
+
+        result = ai.apirequest(
+            self.api_key,
+            b'test_image_data',
+            base_url='http://localhost:11434/v1',
+            model='llava',
+        )
+
+        self.assertEqual(result, 'local_doc')
+        # Client constructed with the custom base_url
+        mock_openai.assert_called_once_with(
+            api_key=self.api_key,
+            base_url='http://localhost:11434/v1',
+        )
+        # Custom model forwarded to the request
+        call_kwargs = mock_client.chat.completions.create.call_args[1]
+        self.assertEqual(call_kwargs['model'], 'llava')
+
+    @patch('openai.OpenAI')
+    def test_apirequest_missing_api_key_uses_placeholder(self, mock_openai):
+        """When no api_key is given, a placeholder should be used (e.g. local Ollama)"""
+        mock_client = Mock()
+        mock_openai.return_value = mock_client
+        mock_completion = Mock()
+        mock_client.chat.completions.create.return_value = mock_completion
+        mock_completion.choices = [Mock(message=Mock(content="doc"))]
+
+        ai.apirequest(None, b'data', base_url='http://localhost:11434/v1', model='llava')
+
+        mock_openai.assert_called_once_with(
+            api_key='not-needed',
+            base_url='http://localhost:11434/v1',
+        )
+
+    @patch('lib.ai.apirequest')
+    def test_get_recommended_filename_from_pil_image_custom(self, mock_apirequest):
+        """Custom helper forwards endpoint/model/api_key to apirequest"""
+        mock_apirequest.return_value = "custom_doc"
+
+        result = ai.get_recommended_filename_from_pil_image_custom(
+            self.test_image,
+            'http://localhost:11434/v1',
+            'llava',
+            'secret',
+        )
+
+        self.assertEqual(result, "custom_doc")
+        # bytes are passed positionally; endpoint/model passed as keywords
+        args, kwargs = mock_apirequest.call_args
+        self.assertEqual(args[0], 'secret')
+        self.assertIsInstance(args[1], bytes)
+        self.assertEqual(kwargs['base_url'], 'http://localhost:11434/v1')
+        self.assertEqual(kwargs['model'], 'llava')
+
+    @patch('lib.ai.apirequest')
+    def test_get_recommended_filename_from_pil_image_custom_handles_errors(self, mock_apirequest):
+        """Custom helper returns empty string on failure"""
+        mock_apirequest.side_effect = Exception("endpoint down")
+        result = ai.get_recommended_filename_from_pil_image_custom(
+            self.test_image, 'http://localhost:11434/v1', 'llava'
+        )
+        self.assertEqual(result, "")
+
     @patch('google.genai.types.Part.from_bytes')
     @patch('google.genai.Client')
     def test_gemini_filename_recommendation(self, mock_client_class, mock_from_bytes):

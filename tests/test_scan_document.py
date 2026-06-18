@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch, Mock
 
 import app
+from tests.ui_guard import UIErrorGuardTestCase
 
 
 class DummyVar:
@@ -16,8 +17,9 @@ class DummyVar:
         return self.value
 
 
-class TestScanDocument(unittest.TestCase):
+class TestScanDocument(UIErrorGuardTestCase):
     def setUp(self):
+        super().setUp()
         # Create a bare instance without invoking __init__
         self.instance = app.PaperlessScanApp.__new__(app.PaperlessScanApp)
 
@@ -33,6 +35,13 @@ class TestScanDocument(unittest.TestCase):
         self.instance.filename_entry.focus = Mock()
         self.instance.upload_button = Mock()
         self.instance.upload_button.config = Mock()
+        # AI provider attributes (scan_document reads all of these). Default to
+        # None so individual tests can opt into a specific provider.
+        self.instance.openai_api_key = None
+        self.instance.gemini_api_key = None
+        self.instance.custom_endpoint = None
+        self.instance.custom_model = None
+        self.instance.custom_api_key = None
         # Ensure cleanup won't error
         if os.path.exists('tmp.jpg'):
             os.remove('tmp.jpg')
@@ -40,6 +49,7 @@ class TestScanDocument(unittest.TestCase):
     def tearDown(self):
         if os.path.exists('tmp.jpg'):
             os.remove('tmp.jpg')
+        super().tearDown()
 
     @patch('app.scan_image')
     @patch('app.get_recommended_filename_from_pil_image')
@@ -72,6 +82,35 @@ class TestScanDocument(unittest.TestCase):
         self.instance.upload_button.config.assert_called_with(text="Upload to Paperless")
         # status_label updated to success message
         self.instance.status_label.config.assert_called_with(text="Document scanned successfully! Enter filename to save.")
+
+    @patch('app.scan_image')
+    @patch('app.get_recommended_filename_from_pil_image_custom')
+    def test_scan_uses_custom_endpoint(self, mock_custom, mock_scan):
+        # When a custom endpoint + model are configured, scan_document should
+        # use the custom provider in preference to OpenAI/Gemini.
+        img = object()
+        mock_scan.return_value = img
+        mock_custom.return_value = 'custom_name'
+
+        self.instance.custom_endpoint = 'http://localhost:11434/v1'
+        self.instance.custom_model = 'llava'
+        self.instance.custom_api_key = 'secret'
+        # OpenAI/Gemini also set to prove custom takes precedence
+        self.instance.openai_api_key = 'openai_key'
+        self.instance.gemini_api_key = 'gemini_key'
+
+        self.instance.display_image_object = Mock()
+
+        self.instance.scan_document()
+
+        mock_custom.assert_called_once_with(
+            img,
+            'http://localhost:11434/v1',
+            'llava',
+            'secret',
+        )
+        self.assertEqual(self.instance.filename, 'custom_name')
+        self.assertEqual(self.instance.filename_var.get(), 'custom_name')
 
     @patch('app.scan_image')
     @patch('app.messagebox.showinfo')

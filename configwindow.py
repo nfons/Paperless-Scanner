@@ -100,7 +100,9 @@ class ConfigWindow:
         self.ai_provider = tk.StringVar()
         
         # Determine initial toggle state based on existing config
-        if self.config.get('openai_api_key'):
+        if self.config.get('custom_endpoint'):
+            self.ai_provider.set('custom')
+        elif self.config.get('openai_api_key'):
             self.ai_provider.set('openai')
         elif self.config.get('gemini_api_key'):
             self.ai_provider.set('gemini')
@@ -132,7 +134,20 @@ class ConfigWindow:
             command=self.on_ai_provider_change
         )
         gemini_radio.pack(side='left', padx=(0, 20))
-        
+
+        # Custom (self-hosted / Ollama) Radio Button
+        custom_radio = tk.Radiobutton(
+            toggle_frame,
+            text="Custom (Self-hosted)",
+            variable=self.ai_provider,
+            value='custom',
+            font=("Arial", 10),
+            fg='#333333',
+            bg='#f0f0f0',
+            command=self.on_ai_provider_change
+        )
+        custom_radio.pack(side='left', padx=(0, 20))
+
         # None Radio Button
         none_radio = tk.Radiobutton(
             toggle_frame,
@@ -160,10 +175,27 @@ class ConfigWindow:
         self.gemini_frame.pack(fill='x', pady=5)
         
         # Gemini API Key
-        self.create_config_entry(self.gemini_frame, "gemini_api_key", "Gemini API Key:", 
-                               self.config.get('gemini_api_key', ''), 
+        self.create_config_entry(self.gemini_frame, "gemini_api_key", "Gemini API Key:",
+                               self.config.get('gemini_api_key', ''),
                                "Google Gemini API Key for filename generation")
-        
+
+        # Custom (self-hosted) Frame
+        self.custom_frame = tk.Frame(ai_frame, bg='#f0f0f0')
+        self.custom_frame.pack(fill='x', pady=5)
+
+        self.create_config_entry(self.custom_frame, "custom_endpoint", "Endpoint URL:",
+                               self.config.get('custom_endpoint', ''),
+                               "OpenAI-compatible base URL (e.g., http://localhost:11434/v1 for Ollama)")
+
+        self.create_config_entry(self.custom_frame, "custom_model", "Model:",
+                               self.config.get('custom_model', ''),
+                               "Vision-capable model name (e.g., llava, llama3.2-vision, moondream, bakllava)")
+
+        self.create_config_entry(self.custom_frame, "custom_api_key", "API Key (optional):",
+                               self.config.get('custom_api_key', ''),
+                               "Leave blank if your endpoint does not require authentication",
+                               is_password=True)
+
         # Info label
         info_label = tk.Label(
             scrollable_frame,
@@ -236,28 +268,34 @@ class ConfigWindow:
     def on_ai_provider_change(self):
         """Handle AI provider toggle changes"""
         provider = self.ai_provider.get()
-        
-        # Show/hide appropriate API key fields
+
+        def clear(*keys):
+            for k in keys:
+                if k in self.entries:
+                    self.entries[k].delete(0, tk.END)
+
+        # Show/hide appropriate fields
         if provider == 'openai':
             self.openai_frame.pack(fill='x', pady=5)
             self.gemini_frame.pack_forget()
-            # Clear Gemini key when OpenAI is selected
-            if 'gemini_api_key' in self.entries:
-                self.entries['gemini_api_key'].delete(0, tk.END)
+            self.custom_frame.pack_forget()
+            clear('gemini_api_key', 'custom_endpoint', 'custom_model', 'custom_api_key')
         elif provider == 'gemini':
             self.openai_frame.pack_forget()
             self.gemini_frame.pack(fill='x', pady=5)
-            # Clear OpenAI key when Gemini is selected
-            if 'openai_api_key' in self.entries:
-                self.entries['openai_api_key'].delete(0, tk.END)
+            self.custom_frame.pack_forget()
+            clear('openai_api_key', 'custom_endpoint', 'custom_model', 'custom_api_key')
+        elif provider == 'custom':
+            self.openai_frame.pack_forget()
+            self.gemini_frame.pack_forget()
+            self.custom_frame.pack(fill='x', pady=5)
+            clear('openai_api_key', 'gemini_api_key')
         else:  # none
             self.openai_frame.pack_forget()
             self.gemini_frame.pack_forget()
-            # Clear both keys when none is selected
-            if 'openai_api_key' in self.entries:
-                self.entries['openai_api_key'].delete(0, tk.END)
-            if 'gemini_api_key' in self.entries:
-                self.entries['gemini_api_key'].delete(0, tk.END)
+            self.custom_frame.pack_forget()
+            clear('openai_api_key', 'gemini_api_key',
+                  'custom_endpoint', 'custom_model', 'custom_api_key')
     
     def center_window(self):
         """Center the window on the screen"""
@@ -339,22 +377,26 @@ class ConfigWindow:
                 if value:  # Only save non-empty values
                     config[key] = value
             
-            # Handle AI provider toggle logic
+            # Handle AI provider toggle logic — only persist keys for the
+            # currently-selected provider so we don't leak credentials.
             provider = self.ai_provider.get()
-            if provider == 'openai':
-                # Only save OpenAI key, remove Gemini key
-                if 'gemini_api_key' in config:
-                    del config['gemini_api_key']
-            elif provider == 'gemini':
-                # Only save Gemini key, remove OpenAI key
-                if 'openai_api_key' in config:
-                    del config['openai_api_key']
-            else:  # none
-                # Remove both AI keys
-                if 'openai_api_key' in config:
-                    del config['openai_api_key']
-                if 'gemini_api_key' in config:
-                    del config['gemini_api_key']
+            custom_keys = ('custom_endpoint', 'custom_model', 'custom_api_key')
+            other_keys = {
+                'openai': ('gemini_api_key',) + custom_keys,
+                'gemini': ('openai_api_key',) + custom_keys,
+                'custom': ('openai_api_key', 'gemini_api_key'),
+                'none':   ('openai_api_key', 'gemini_api_key') + custom_keys,
+            }.get(provider, ())
+            for k in other_keys:
+                config.pop(k, None)
+
+            if provider == 'custom':
+                if not config.get('custom_endpoint') or not config.get('custom_model'):
+                    messagebox.showerror(
+                        "Save Error",
+                        "Custom provider requires both an Endpoint URL and a Model."
+                    )
+                    return
             
             # Save to file
             with open('config.yaml', 'w') as file:
