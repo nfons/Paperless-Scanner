@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch, Mock
 
 import app
+from tests.ui_guard import UIErrorGuardTestCase
 
 
 class DummyVar:
@@ -16,8 +17,9 @@ class DummyVar:
         return self.value
 
 
-class TestScanDocument(unittest.TestCase):
+class TestScanDocument(UIErrorGuardTestCase):
     def setUp(self):
+        super().setUp()
         # Create a bare instance without invoking __init__
         self.instance = app.PaperlessScanApp.__new__(app.PaperlessScanApp)
 
@@ -47,6 +49,7 @@ class TestScanDocument(unittest.TestCase):
     def tearDown(self):
         if os.path.exists('tmp.jpg'):
             os.remove('tmp.jpg')
+        super().tearDown()
 
     @patch('app.scan_image')
     @patch('app.get_recommended_filename_from_pil_image')
